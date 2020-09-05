@@ -1,0 +1,12 @@
+// By Guilherme Torquato 
+// A Toffoli Gate made of non reversible gates
+
+CHIP Toffoli {
+    IN a, b, c;
+    OUT ao, bo, co;
+    PARTS:
+    And(a=a,b=b,out=z);
+    Not(in=z,out=w);
+    Nor(a=w,b=c,out=co);
+    ao=a, bo=b;
+}
