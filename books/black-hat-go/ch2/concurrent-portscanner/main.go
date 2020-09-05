@@ -11,7 +11,7 @@ import (
 var (
   host *string
   portsRange *int
-  timeoutVal *int
+  timeoutVal *int64
 )
 
 func printHelp() {
@@ -21,7 +21,8 @@ func printHelp() {
 
 func worker(ports, results chan int) {
   for p := range ports {
-    conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", *host, p), 2 * time.Second)
+
+    conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", *host, p), time.Duration(*timeoutVal) * time.Second)
 
     if err != nil {
       results <- 0
@@ -38,7 +39,7 @@ func main() {
   flag.Usage = printHelp
   host = flag.String("a", "scanme.nmap.org", "set adress")
   portsRange = flag.Int("r", 1024, "set range of ports 0...")
-  timeoutVal = flag.Int("t", 5, "set timeout value in seconds")
+  timeoutVal = flag.Int64("t", 5, "set timeout value in seconds")
 
   channelBuf := flag.Int("b", 100, "set buffer size, high values = + speed but - reliability")
   unsortedResults := flag.Bool("u", false, "show open ports unsorted but more faster")

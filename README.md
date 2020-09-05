@@ -1,3 +1,3 @@
 # std
 
-Standard repo with all my study
+Standard repo with all my studies
