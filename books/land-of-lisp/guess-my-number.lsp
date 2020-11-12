@@ -1,0 +1,16 @@
+(defparameter *big*  100)
+(defparameter *small* 1)
+
+(defun guess ()
+  (ash (+ *big* *small*) -1))
+(defun bigger ()
+  (setf *small* (1+ (guess)))
+  (guess))
+(defun smaller ()
+  (setf *big* (1- (guess)))
+  (guess))
+
+(defun restart ()
+  (defparameter *big*  100)
+  (defparameter *small* 1)
+  (guess))

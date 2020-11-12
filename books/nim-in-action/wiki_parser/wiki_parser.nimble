@@ -2,13 +2,12 @@
 
 version       = "0.1.0"
 author        = "Guilherme Torquato"
-description   = "THE Chat"
+description   = "Wikipedia most popular parser from Nim in Action"
 license       = "0BSD"
 srcDir        = "src"
-bin           = @["client", "server"]
-
+bin           = @["wiki_parser"]
 
 
 # Dependencies
 
-requires "nim >= 1.2.0"
+requires "nim >= 1.4.0"

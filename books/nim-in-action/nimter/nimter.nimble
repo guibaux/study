@@ -2,13 +2,12 @@
 
 version       = "0.1.0"
 author        = "Guilherme Torquato"
-description   = "THE Chat"
+description   = "Twitter Clone"
 license       = "0BSD"
 srcDir        = "src"
-bin           = @["client", "server"]
-
-
+bin           = @["nimter"]
+skipExt       = @["nim"]
 
 # Dependencies
 
-requires "nim >= 1.2.0"
+requires "nim >= 1.4.0", "jester >= 0.4.0"
