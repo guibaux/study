@@ -1,17 +1,27 @@
 (ns basics.core
   (:gen-class))
 
-(def an-var 3)
+(def a-var 3)
+(def a-map {:key 10 :value 8})
+(def a-set #{"Hello" "I" "Am" "Here"})
+
 (defn average [a b]
   (/ (+ a b) 2.0))
+
+(defn multiply 
+  ([a] (multiply a 2))
+  ([a b] (* a b)))
+(defn variadic [& args]
+  args)
+(defn first-arg [x & args] x)
 ;; Basics
 (defn -main []
   (println "Hello, World!") ; Prints Hello
   (count "Hello") ; returns 5
   (str "One" " " 2 " " "Three" "!") ; concat strings and numbers
   (count [1 2 3 4]) ; returns 4
-  (println an-var) ; returns 3
-  (average an-var 5) ; returns 4.0
+  (println a-var) ; returns 3
+  (average a-var 5) ; returns 4.0
   (/ 3 8) ; returns 3/8
   ;; (/ 100 0) ; Divide By Zero error
 
@@ -36,6 +46,67 @@
             "value" 7)
   ({"key" 10 "value" 7} "value") ; returns 7 or (get *map* *value*)
   ({"key" 10 "value" 7} "null") ; returns nil if not in the map
-  (:key {:key 10 :value 8}) ; returns 10 or (*map* :*key*)
+  (:key a-map) ; returns 10 or (*map* :*key*)
+  (assoc a-map :key2 6) ; returns {:key 10, :value 8, :key2 6}
+  (dissoc a-map :key) ; returns {:value 8}
+  (dissoc a-map :notin) ; dont change anything, because dissoc ignores symbols that arent in the map
+  (assoc [:key :here :value] 1 :changed) ; returns [:key :changed :value], vectors are maps with integers as keys
+  (keys a-map) ; returns (:key :value), hash-maps keys arent in order, for this use sorted-map
+  (vals a-map) ; returns (10 8)
+  ;; Be Careful with maps with nil value keys
+
+  ;; Sets
+  ;;   Cannot Duplicate values
+  (contains? a-set "Here") ; -> true
+  (contains? a-set "Not in Here"); -> false
+  (a-set "Here") ; -> "Here"
+  (a-set "Not in here") ; -> nil
+  (conj a-set "Hi!") ; -> #{"Am" "Hello" "Hi!" "I" "Here"}
+  (disj a-set "Hello") ; -> #{"Am" "I" "Here"}
+
+  ;; Logic
+  (if true "True" "False") ; -> True
+  (if false "True" "False") ; -> False
+  (if 0 "True" "False") ; -> True
+  (when 0 "True") ; -> True
+  (when 10
+    println "Do!"
+    10) ; -> 10, same as (if 10 (do println "Do!" 10) "...")
+  (cond
+    (> 3 4) false
+    (< 10 3) false
+    (= 7 6) false
+    :else true) ; -> true
+  (case :hello
+    :notme false
+    :neitheri false
+    :itsme) ; -> :itsme, the last expression always matches
+  ;; Only false and nil evaluates as false
+  (= 2 2) ; -> true
+  (= 2 (- 6 (* 2 2)) 2 (* 2 1) (- 10 8) 2 (+ 1 1)) ; -> true
+  (= 5 5 5 5 5 3 5); -> false
+  (not= 5 6); -> false, same as (not (= ...))
+  (number? 5); -> true
+  (map? a-map); -> true
+  (keyword? :keyword); -> true
+  ;; string?, vector?...
+  (> 3 2 1); -> true
+  (> 3 1 2); -> false
+  ;; x > y > z ...
+
+  ;;   Errors
+  (try
+    (/ 0 0)
+    (catch ArithmeticException e (println "Math errors...")))
+  ;;(throw
+  ;;  (ex-info "Generic Error" 20)) -> Exception type is clojure.lang.ExceptionInfo
+  (and true "True"); -> "True"
+  (and "True" nil 10) ; -> nil
+  ;; doing (= (and x y) true) is wrong
   
+  ;; Functions
+  (multiply 2) ; -> 4
+  (multiply 2 3) ; -> 6
+  (variadic 10 30 true nil) ; -> (10 30 true nil)
+  (first-arg 10 30 true nil); -> 10
   )
