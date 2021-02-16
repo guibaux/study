@@ -14,6 +14,38 @@
 (defn variadic [& args]
   args)
 (defn first-arg [x & args] x)
+
+(defn multimethod-base [arg]
+  (vector? arg) :vec
+  (contains? arg :me) :me
+  (contains? arg :other) :other)
+(defmulti multimethod multimethod-base)
+(defmethod multimethod :vec [arg]
+  (println arg "is a vector"))
+(defmethod multimethod :me [arg]
+  (println arg "contains me"))
+(defmethod multimethod :other [arg]
+  (println arg "has" (+ 2 3) "friends"))
+
+(defn sum-array [arr]
+  (loop [arr arr total 0]
+    (if (empty? arr)
+      total
+      (recur 
+       (rest arr)
+       (+ total (first arr))))))
+(defn documented-fn 
+  "I'm a doc"
+  []
+  "Nothing")
+
+(defn pre-cond [arg]
+  {:pre [(:me arg)]}
+  (:me arg))
+(defn post-cond [arg]
+  {:post [(number? %)]}
+  (:me arg))
+
 ;; Basics
 (defn -main []
   (println "Hello, World!") ; Prints Hello
@@ -103,10 +135,25 @@
   (and true "True"); -> "True"
   (and "True" nil 10) ; -> nil
   ;; doing (= (and x y) true) is wrong
-  
+
   ;; Functions
   (multiply 2) ; -> 4
   (multiply 2 3) ; -> 6
   (variadic 10 30 true nil) ; -> (10 30 true nil)
   (first-arg 10 30 true nil); -> 10
+  (multimethod [1 2 3])
+  (multimethod {:me "Hello"})
+  (multimethod {:other "I have friends!"})
+  ;; Multimethods allow to modify the behaviour of the function by the argument characteristics
+  ;; we can use the keys is multimethod definition to select based on this key
+  (sum-array [3 4 5]); -> 12
+  ;; recur is low level a better way to do this is:
+  (reduce + [3 4 5]); -> 12
+
+  ;; (doc documented-fn); -> basics.core/documented-fn
+                        ;    ([])
+                        ;      I'm a doc
+                        ;    nil
+  ;;(pre-cond {:not 12}); -> Assertion failure, :me not in the map
+  ;;(post-cond {:me "String"}); -> Assertion Error, "String" is not a number
   )
